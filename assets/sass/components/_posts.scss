@@ -1,68 +1,76 @@
-/*
-	Atmosphere by Pixelarity
-	pixelarity.com | hello@pixelarity.com
-	License: pixelarity.com/license
-*/
+///
+/// Vortex by Pixelarity
+/// pixelarity.com | hello@pixelarity.com
+/// License: pixelarity.com/license
+///
 
 /* Posts */
 
 	.posts {
-		margin-bottom: (_size(element-margin) * 2);
+		width: 100%;
+		margin: 0 0 _size(element-margin) 0;
 
 		article {
-			@include vendor('display', 'flex');
-			@include vendor('align-items', 'center');
-			margin-bottom: _size(element-margin);
-			width: 100%;
-
-			.content {
-				-ms-flex: 1;
-			}
-
 			.image {
-				@include vendor('order', '99');
-				margin: 0 0 _size(element-margin) _size(element-margin);
-			}
+				display: block;
+				width: 100%;
+				margin: 0 0 _size(element-margin) 0;
 
-			&.alt {
-				.image {
-					@include vendor('order', '-1');
-					margin: 0 _size(element-margin) _size(element-margin) 0;
-				}
-			}
-		}
-
-		@include breakpoint(large) {
-			.content {
-				@include vendor('flex-shrink', '0');
-				width: 33%;
-			}
-
-			.image {
 				img {
-					max-width: 100%;
+					width: 100%;
 				}
 			}
+
+			> :last-child {
+				margin-bottom: 0;
+			}
 		}
+
+		@include flexgrid((
+			columns:			3,
+			gutters:			3rem,
+			horizontal-align:	center,
+			flush:				true
+		));
 
 		@include breakpoint(medium) {
-			article {
-				@include vendor('flex-wrap', 'wrap');
+			@include vendor('justify-content', 'center');
 
-				.content {
-					width: 100%;
-				}
+			@include flexgrid-resize((
+				columns:		2,
+				gutters:		3rem,
+				flush:			true,
+				prev-columns:	3
+			));
 
-				.image {
-					@include vendor('order', '-1');
-					margin-left: 0;
-					margin-right: 0;
-					width: 100%;
-				}
+			article:nth-child(3n):last-child {
+				padding-right: 0;
 			}
 		}
 
 		@include breakpoint(small) {
-			margin-bottom: _size(element-margin);
+			@include flexgrid-resize((
+				columns:		2,
+				gutters:		2rem,
+				flush:			true,
+				prev-columns:	(3, 2)
+			));
+		}
+
+		@include breakpoint(xsmall) {
+			@include flexgrid-resize((
+				columns:		1,
+				gutters:		3rem,
+				flush:			true,
+				prev-columns:	(3, 2)
+			));
+		}
+
+		@include breakpoint(xsmall) {
+			article {
+				.image {
+					max-width: 100%;
+				}
+			}
 		}
 	}

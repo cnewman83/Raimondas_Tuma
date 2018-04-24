@@ -1,5 +1,5 @@
 /*
-	Atmosphere by Pixelarity
+	Vortex by Pixelarity
 	pixelarity.com | hello@pixelarity.com
 	License: pixelarity.com/license
 */
@@ -8,19 +8,18 @@
 
 	skel.breakpoints({
 		xlarge:	'(max-width: 1680px)',
-		large: '(max-width: 1280px)',
-		medium: '(max-width: 980px)',
-		small: '(max-width: 736px)',
-		xsmall: '(max-width: 480px)',
+		large:	'(max-width: 1280px)',
+		medium:	'(max-width: 980px)',
+		small:	'(max-width: 736px)',
+		xsmall:	'(max-width: 480px)',
 		xxsmall: '(max-width: 360px)'
 	});
 
 	$(function() {
 
 		var	$window = $(window),
-			$body = $('body'),
 			$header = $('#header'),
-			$banner = $('#banner');
+			$body = $('body');
 
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
@@ -31,8 +30,30 @@
 				}, 100);
 			});
 
-		// Fix: Placeholder polyfill.
-			$('form').placeholder();
+		// Tweaks/fixes.
+
+			// Polyfill: Object fit.
+				if (!skel.canUse('object-fit')) {
+
+					$('.image[data-position]').each(function() {
+
+						var $this = $(this),
+							$img = $this.children('img');
+
+						// Apply img as background.
+							$this
+								.css('background-image', 'url("' + $img.attr('src') + '")')
+								.css('background-position', $this.data('position'))
+								.css('background-size', 'cover')
+								.css('background-repeat', 'no-repeat');
+
+						// Hide img.
+							$img
+								.css('opacity', '0');
+
+					});
+
+				}
 
 		// Prioritize "important" elements on medium.
 			skel.on('+medium -medium', function() {
@@ -42,131 +63,37 @@
 				);
 			});
 
-		// Scrolly.
-			$('.scrolly').scrolly({
-				offset: function() {
-					return $header.height();
-				}
+		// Dropdowns.
+			$('#nav > ul').dropotron({
+				alignment: 'right',
+				hideDelay: 350,
+				baseZIndex: 100000
 			});
 
-		// Header.
-			if (skel.vars.IEVersion < 9)
-				$header.removeClass('alt');
-
-			if ($banner.length > 0
-			&&	$header.hasClass('alt')) {
-
-				$window.on('resize', function() { $window.trigger('scroll'); });
-
-				$banner.scrollex({
-					bottom:		$header.outerHeight(),
-					terminate:	function() { $header.removeClass('alt'); },
-					enter:		function() { $header.addClass('alt'); },
-					leave:		function() { $header.removeClass('alt'); }
-				});
-
-			}
-
 		// Menu.
-			var $menu = $('#menu');
+			$('<a href="#navPanel" class="navPanelToggle">Menu</a>')
+				.appendTo($header);
 
-			$menu._locked = false;
-
-			$menu._lock = function() {
-
-				if ($menu._locked)
-					return false;
-
-				$menu._locked = true;
-
-				window.setTimeout(function() {
-					$menu._locked = false;
-				}, 350);
-
-				return true;
-
-			};
-
-			$menu._show = function() {
-
-				if ($menu._lock())
-					$body.addClass('is-menu-visible');
-
-			};
-
-			$menu._hide = function() {
-
-				if ($menu._lock())
-					$body.removeClass('is-menu-visible');
-
-			};
-
-			$menu._toggle = function() {
-
-				if ($menu._lock())
-					$body.toggleClass('is-menu-visible');
-
-			};
-
-			$menu
-				.appendTo($body)
-				.on('click', function(event) {
-
-					event.stopPropagation();
-
-					// Hide.
-						$menu._hide();
-
-				})
-				.find('.inner')
-					.on('click', '.close', function(event) {
-
-						event.preventDefault();
-						event.stopPropagation();
-						event.stopImmediatePropagation();
-
-						// Hide.
-							$menu._hide();
-
-					})
-					.on('click', function(event) {
-						event.stopPropagation();
-					})
-					.on('click', 'a', function(event) {
-
-						var href = $(this).attr('href');
-
-						event.preventDefault();
-						event.stopPropagation();
-
-						// Hide.
-							$menu._hide();
-
-						// Redirect.
-							window.setTimeout(function() {
-								window.location.href = href;
-							}, 350);
-
+			$(	'<div id="navPanel">' +
+					'<nav>' +
+						$('#nav') .navList() +
+					'</nav>' +
+					'<a href="#navPanel" class="close"></a>' +
+				'</div>')
+					.appendTo($body)
+					.panel({
+						delay: 500,
+						hideOnClick: true,
+						hideOnSwipe: true,
+						resetScroll: true,
+						resetForms: true,
+						side: 'right'
 					});
 
-			$body
-				.on('click', 'a[href="#menu"]', function(event) {
-
-					event.stopPropagation();
-					event.preventDefault();
-
-					// Toggle.
-						$menu._toggle();
-
-				})
-				.on('keydown', function(event) {
-
-					// Hide on escape.
-						if (event.keyCode == 27)
-							$menu._hide();
-
-				});
-
+			if (skel.vars.os == 'wp'
+			&&	skel.vars.osVersion < 10)
+				$('#navPanel')
+					.css('transition', 'none');
 
 	});
 

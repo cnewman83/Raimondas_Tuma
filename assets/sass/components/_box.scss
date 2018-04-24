@@ -1,16 +1,16 @@
-/*
-	Atmosphere by Pixelarity
-	pixelarity.com | hello@pixelarity.com
-	License: pixelarity.com/license
-*/
+///
+/// Vortex by Pixelarity
+/// pixelarity.com | hello@pixelarity.com
+/// License: pixelarity.com/license
+///
 
 /* Box */
 
 	.box {
+		border: solid 1px;
 		border-radius: _size(border-radius);
-		border: solid _size(border-width);
 		margin-bottom: _size(element-margin);
-		padding: 1.5em;
+		padding: 1.5rem;
 
 		> :last-child,
 		> :last-child > :last-child,
