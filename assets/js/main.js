@@ -29,6 +29,11 @@
 					$body.removeClass('is-loading');
 				}, 100);
 			});
+        
+        
+       
+
+        
 
 		// Tweaks/fixes.
 
@@ -95,6 +100,10 @@
 				$('#navPanel')
 					.css('transition', 'none');
 
+        
+     
+
+        
 	});
 
 })(jQuery);
